@@ -22,7 +22,7 @@ Examples:
 
 ![](https://github.com/phantomiil/rationals/blob/master/0_3183098861837907-1.png "Seed: 1/PI, Modulo: 1")
 
-![](https://github.com/phantomiil/rationals/blob/master/1_41421%2B1_41421i-0_3%2B0_5i.png "Seed: sqrt(2)+sqrt(2)i, Modulo: 1")
+![](https://github.com/phantomiil/rationals/blob/master/1_41421%2B1_41421i-1.png "Seed: sqrt(2)+sqrt(2)i, Modulo: 1")
 
 ![](https://github.com/phantomiil/rationals/blob/master/1_41421%2B1_41421i-0_3%2B0_5i.png "Seed: sqrt(2)+sqrt(2)i, Modulo: 0.3+5.i")
 
