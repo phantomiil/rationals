@@ -1,0 +1,63 @@
+#!/usr/bin/env slsh
+% usage: rationals [start value, [modulo value]]
+% will output into awesome.png
+require("xfig");
+require("rand");
+require("png");
+
+variable ndraw = 1; %rand_int(1,5);
+
+variable npoint = 900;
+variable edge = 4;
+variable pointr = 20; % in terms of pixels
+variable rstep = 2; % in terms of pixels
+variable npix = 1; % squared of course
+variable modulo = 1;
+variable start = 2*rand_uniform()-1 + (2*rand_uniform-1)*1i;
+npix = (npix > (npoint*rstep+pointr)*2) ? npix : (npoint*rstep+pointr)*2+1;
+npix = npix + (npix mod 2); % make even
+print(npix);
+if (__argc == 2) start = eval(__argv[1]);
+else if (__argc == 3) { start = eval(__argv[1]); modulo = eval(__argv[2]);}
+
+%print(npix);
+
+define cmod (z, m) {
+  variable f = (z-floor(z/m)*m)*(1+0i);
+  return f;
+}
+
+define phi_calc (a, p, m) {
+  variable b = cmod(a*p, m);
+  return b;
+}
+
+variable IMG = @Double_Type[npix*npix]-1;
+reshape(IMG, [npix, npix]);
+
+define sort_it_in (phi, r) {
+  variable x = r*sin(2*PI*Real(phi));
+  variable y = r*cos(2*PI*Real(phi));
+  %vmessage("x: %f, y: %f", x, y);
+  IMG[(npix/2 + int(y))+[-pointr:pointr], (npix/2 + int(x))+[-pointr:pointr]] = -2;
+  IMG[(npix/2 + int(y))+[-pointr+edge:pointr-edge], (npix/2 + int(x))+[-pointr+edge:pointr-edge]] = Imag(phi);
+}
+
+%variable run;
+%_for run (1, ndraw) {
+  variable cur = start;
+  vmessage("Generate with: %S", cur);
+  variable phi = array_map(Complex_Type, &phi_calc, [0:npoint-1], cur, modulo);
+  %print(phi);
+  variable r = [npoint*rstep:rstep:-rstep];
+  array_reverse(phi);
+  array_map(&sort_it_in, phi, r);
+%}
+
+%plot_image(IMG);
+variable png = png_gray_to_rgb(IMG, "rainbow");
+png[where(IMG>=0)] += 0xFF000000;
+png[where(IMG==-1)] = 0;
+png[where(IMG==-2)] = 0xFF000000;
+
+png_write("awesome.png", png, 1);
